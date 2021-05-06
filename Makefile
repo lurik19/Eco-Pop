@@ -1,6 +1,6 @@
 # --------------------------------------------------------- #
 # *** WARNING ***: to use this Makefile make sure to change #
-# the LIBS value to the path of your BOOST library!			#
+# the LIBS value to the path of your BOOST library!         #
 # --------------------------------------------------------- #
 
 CC = g++
