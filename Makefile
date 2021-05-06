@@ -1,3 +1,8 @@
+# --------------------------------------------------------- #
+# *** WARNING ***: to use this Makefile make sure to change #
+# the LIBS value to the path of your BOOST library!			#
+# --------------------------------------------------------- #
+
 CC = g++
 CFLAGS = -Wall -O3 -Ofast --std=c++11
 LIBS = /usr/lib/boost_1_76_0
@@ -12,9 +17,6 @@ main.exe: main.o functions.o
 
 %.o: %.cpp
 	$(CC) -c $< $(CFLAGS) -I $(LIBS)
-
-go: main.exe
-	./main.exe
 
 clean :
 	rm *.o *.exe

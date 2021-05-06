@@ -1,3 +1,8 @@
+// ------------------------------------------------------------- //
+// *** WARNING ***: to compile this file make sure to change the //
+// LIBS value in the Makefile to the path of your BOOST library! //
+// ------------------------------------------------------------- //
+
 #ifndef __FUNCTIONS__
 #define __FUNCTIONS__
 #include <random>       // default_random_engine, normal_distribution, poisson_distribution, binomial_distribution, uniform_int_distribution

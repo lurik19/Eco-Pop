@@ -1,5 +1,9 @@
+// ------------------------------------------------------------- //
+// *** WARNING ***: to compile this file make sure to change the //
+// LIBS value in the Makefile to the path of your BOOST library! //
+// ------------------------------------------------------------- //
+
 #include "functions.h"
-#include <ctime>    // clock, CLOCKS_PER_SEC
 
 default_random_engine rng(0); // not sure if this is orthodox C++
 

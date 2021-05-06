@@ -1,3 +1,8 @@
+// ------------------------------------------------------------- //
+// *** WARNING ***: to compile this file make sure to change the //
+// LIBS value in the Makefile to the path of your BOOST library! //
+// ------------------------------------------------------------- //
+
 #include "functions.h"
 #include <stdio.h>  // printf, sprintf, fopen, fprintf, fclose
 #include <iostream> // cout, endl, ...
