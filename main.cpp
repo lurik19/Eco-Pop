@@ -12,7 +12,7 @@
 
 using namespace std;
 
-void load_input(int &R, int &n_start, int &n_gen, int &D, int &NU_X, int &NU_alpha, int &n_simulations, vector<double> &eps, vector<double> &s, int argc, char *argv[]);
+void load_input(int &R, int &n_start, int &n_gen, int &dt_gen, int &D, int &NU_X, int &NU_alpha, int &n_simulations, int &fast, vector<double> &eps, vector<double> &s, int argc, char *argv[]);
 
 int main(int argc, char *argv[]){
 
@@ -24,6 +24,7 @@ int main(int argc, char *argv[]){
     int R; // number of resources
     int n_start; // initial number of individuals
     int n_gen; // number of generations
+    int dt_gen; // number of generations between two sequencings
     int D; // depth of sequencing
 
     // number of mutations in the population per generation
@@ -32,11 +33,13 @@ int main(int argc, char *argv[]){
 
     int n_simulations; // number of simulations with the same parameters
 
+    int fast; // if we want faster simulations we have to give up "checkpoints" (sequencing every dt_gen generations) (fast = 1, slow = 0)
+
     vector<double> eps; // small perturbations around the completely symmetric state for beta
     vector<double> s; // fitness increment in mutation
 
     // we load the input from command line
-    load_input(R, n_start, n_gen, D, NU_X, NU_alpha, n_simulations, eps, s, argc, argv);
+    load_input(R, n_start, n_gen, dt_gen, D, NU_X, NU_alpha, n_simulations, fast, eps, s, argc, argv);
     
     output_run out;
     
@@ -64,7 +67,10 @@ int main(int argc, char *argv[]){
                 printf("    # of sequenced species = %i\n", out.n_species);
             }
 
-            out = run(R, n_start, n_gen, D, NU_X, NU_alpha, eps[i], s[i]);
+            if (fast == 1)
+                out = run(R, n_start, n_gen, D, NU_X, NU_alpha, eps[i], s[i]);
+            else
+                out = run_complete(R, n_start, n_gen, dt_gen, D, NU_X, NU_alpha, eps[i], s[i]);
 
             fprintf(fp, "%f, %i\n", out.scaled_rate, out.n_species);
 
@@ -81,20 +87,22 @@ int main(int argc, char *argv[]){
 }
 
 // function to read arguments from command line
-void load_input(int &R, int &n_start, int &n_gen, int &D, int &NU_X, int &NU_alpha, int &n_simulations, vector<double> &eps, vector<double> &s, int argc, char *argv[]){
+void load_input(int &R, int &n_start, int &n_gen, int &dt_gen, int &D, int &NU_X, int &NU_alpha, int &n_simulations, int &fast, vector<double> &eps, vector<double> &s, int argc, char *argv[]){
 
     R = int(stod(argv[1])); // number of resources
     n_start = int(stod(argv[2])); // initial number of individuals
     n_gen = int(stod(argv[3])); // number of generations
-    D = int(stod(argv[4])); // depth of sequencing
+    dt_gen = int(stod(argv[4])); // number of generations between two sequencings
+    D = int(stod(argv[5])); // depth of sequencing
 
     // number of mutations in the population per generation
-    NU_X = int(stod(argv[5]));
-    NU_alpha = int(stod(argv[6]));
+    NU_X = int(stod(argv[6]));
+    NU_alpha = int(stod(argv[7]));
 
-    n_simulations = int(stod(argv[7])); // number of simulations with the same parameters
-
-    vector<string> data(argv + 8, argv + argc + !argc); // load the remaining data in this vector
+    n_simulations = int(stod(argv[8])); // number of simulations with the same parameters
+    fast = int(stod(argv[9])); // if we want faster simulations we have to give up "checkpoints" (sequencing every dt_gen generations) (fast = 1, slow = 0)    
+    
+    vector<string> data(argv + 10, argv + argc + !argc); // load the remaining data in this vector
 
     // split data between eps and s
     std::transform(data.begin(), data.end() - data.size() / 2, std::back_inserter(eps),

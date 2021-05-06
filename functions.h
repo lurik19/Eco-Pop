@@ -15,6 +15,8 @@
 #include <boost/functional/hash.hpp> // hash_range
 
 #include <iostream>
+#include <stdio.h>  // sprintf, fopen, fprintf, fclose
+
 
 using namespace std;
 
@@ -52,5 +54,6 @@ void update_umap(vector<vector<double>> &alpha_X_new, u_map &u_map_alpha_X);
 int sequencing(u_map u_map_alpha_X, int D, int R);
 
 output_run run(int R, int n, int n_gen, int D, int NU_X, int NU_alpha, double eps, double s);
+output_run run_complete(int R, int n, int n_gen, int dt_gen, int D, int NU_X, int NU_alpha, double eps, double s);
 
 # endif

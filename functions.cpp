@@ -321,7 +321,7 @@ output_run run(int R, int n, int n_gen, int D, int NU_X, int NU_alpha, double ep
 
     vector<double> alpha_X = initial_alpha_X(R); // initial resource strategy for the ancestral population
     vector<double> beta = compute_beta(R, eps); // resources' supply rates
-    
+
     u_map u_map_alpha_X {{alpha_X, n}};
 
     // probabilities of mutations
@@ -330,10 +330,49 @@ output_run run(int R, int n, int n_gen, int D, int NU_X, int NU_alpha, double ep
 
     for (int i = 0; i < n_gen; i++){
         selection_step(u_map_alpha_X, beta, R);
-        mutation_step(u_map_alpha_X, s, U_X, U_alpha, R); 
+        mutation_step(u_map_alpha_X, s, U_X, U_alpha, R);
     }
 
     int n_sequenced_species = sequencing(u_map_alpha_X, D, R);
+
+    output_run result;
+    result.n_species = n_sequenced_species;
+    result.scaled_rate = U_X * s * s * (double)R / (U_alpha * eps * eps);
+    
+    return result;
+
+}
+
+output_run run_complete(int R, int n, int n_gen, int dt_gen, int D, int NU_X, int NU_alpha, double eps, double s){
+
+    vector<double> alpha_X = initial_alpha_X(R); // initial resource strategy for the ancestral population
+    vector<double> beta = compute_beta(R, eps); // resources' supply rates
+    int n_sequenced_species;
+
+    char filename[50];
+    FILE * fp;
+    sprintf(filename, "./Data/n_gen_%.1e_%.1e.txt", eps, s);
+    fp = fopen(filename, "a");
+
+    u_map u_map_alpha_X {{alpha_X, n}};
+
+    // probabilities of mutations
+    double U_X = (double) NU_X / n;
+    double U_alpha = (double) NU_alpha / (n * R);
+
+    for (int i = 0; i < n_gen; i++){
+        selection_step(u_map_alpha_X, beta, R);
+        mutation_step(u_map_alpha_X, s, U_X, U_alpha, R);
+
+        if((i + 1) % dt_gen == 0){
+            n_sequenced_species = sequencing(u_map_alpha_X, D, R);
+            fprintf(fp, "%i, %i\n", i + 1, n_sequenced_species);
+        }
+    }
+    
+    fclose(fp);
+
+    n_sequenced_species = sequencing(u_map_alpha_X, D, R);
 
     output_run result;
     result.n_species = n_sequenced_species;
