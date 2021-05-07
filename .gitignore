@@ -3,6 +3,3 @@
 /functions.o
 /main.exe
 /main.o
-/_gitkeep_in_cartelle_vuote.sh
-/Data/* # exclude everything in Data
-!/Data/.gitkeep # exception to the rule
