@@ -3,3 +3,7 @@
 /functions.o
 /main.exe
 /main.o
+/Data/*.txt
+/Data/Images/*.*
+/Untitled.ipynb
+/Data_*
